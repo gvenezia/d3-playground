@@ -16,3 +16,6 @@ I use the npm package, `http-server`, to set up a simple local server.
 This simple line graph is written with d3.js v4 and based on @mbostock's example [here](http://bl.ocks.org/mbostock/02d893e3486c70c4475f). 
 
 This simple graph is designed to be used as a starting point for further development as part of documenting an update to the book [D3 Tips and Tricks](https://leanpub.com/d3-t-and-t-v4) to version 4 of d3.js.
+
+Here's a screenshot of the basic setup:
+![screenshot of the graph in the browser](https://github.com/gvenezia/d3-playground/blob/master/graph.png)
