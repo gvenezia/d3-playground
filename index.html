@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
+<meta charset='utf-8'>
 <style> /* set the CSS */
 
 .f {
@@ -9,23 +9,23 @@
 .line {
   fill: none;
   stroke: steelblue;
-  stroke-width: 15px;
+  stroke-width: 14px;
 }
 
 </style>
 <body>
 
 <!-- load the d3.js library -->    	
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src='https://d3js.org/d3.v4.min.js'></script>
 <script>
 
 // set the dimensions and margins of the graph
-var margin = {top: 100, right: 100, bottom: 200, left: 100},
+var margin = {top: 100, right: 100, bottom: 200, left: 200},
     width = 1060 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
 // parse the date / time
-var parseTime = d3.timeParse("%d-%b-%y");
+var parseTime = d3.timeParse('%d-%b-%y');
 
 // set the ranges
 var x = d3.scaleTime().range([0, width]);
@@ -39,15 +39,15 @@ var valueline = d3.line()
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+var svg = d3.select('body').append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+  .append('g')
+    .attr('transform',
+          'translate(' + margin.left + ',' + margin.top + ')');
 
 // Get the data
-d3.csv("data.csv", function(error, data) {
+d3.csv('data.csv', function(error, data) {
   if (error) throw error;
 
   // format the data
@@ -61,29 +61,47 @@ d3.csv("data.csv", function(error, data) {
   y.domain([0, d3.max(data, function(d) { return d.close; })]);
 
   // Add the valueline path.
-  svg.append("path")
+  svg.append('path')
       .data([data])
-      .attr("class", "line")
-      .attr("d", valueline);
+      .attr('class', 'line')
+      .attr('d', valueline);
 
   // Add the X Axis
-  svg.append("g")
+  svg.append('g')
       .attr('class', 'f')
-      .attr("transform", "translate(0," + height + ")")
+      .attr('transform', 'translate(0,' + height + ')')
       .call(d3.axisBottom(x)
         .ticks(d3.timeDay.every(3))
-        .tickFormat(d3.timeFormat("%Y-%m-%d"))) 
+        .tickFormat(d3.timeFormat('%Y-%m-%d'))) 
       .selectAll('text')
         .style('text-anchor', 'end')
         .attr('dx', '-.8em')
         .attr('dy', '-.15em')
-        .attr('transform', 'rotate(-45)');
+        .attr('transform', 'rotate(-35)');
+
+  // Text label for X Axis
+  svg.append('text')
+      .attr('class', 'f')
+      .attr('x', width / 2)
+      .attr('y', height + margin.top - 10)
+      .style('text-anchor', 'middle')
+      .text('Date');
         
 
   // Add the Y Axis
-  svg.append("g")
+  svg.append('g')
       .attr('class', 'f')
       .call(d3.axisLeft(y));
+
+  // Text labe for Y Axis
+  svg.append('text')
+      .attr('class', 'f')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - (margin.left / 2)) 
+      .attr('x', 0 - (height / 2) )
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Value');
 
 });
 
