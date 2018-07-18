@@ -1,0 +1,15 @@
+{
+  "name": "firstgraph",
+  "version": "1.0.0",
+  "description": "This is a simple line graph written with d3.js v4 and based on @mbostock's example [here](http://bl.ocks.org/mbostock/02d893e3486c70c4475f).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "lr-http-server": "^0.1.5"
+  }
+}
