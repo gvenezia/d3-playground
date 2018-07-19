@@ -60,7 +60,15 @@ d3.csv('data.csv', function(error, data) {
   x.domain(d3.extent(data, function(d) { return d.date; }));
   y.domain([0, d3.max(data, function(d) { return d.close; })]);
 
-  // Add the valueline path.
+  // Add the title of the graph
+  svg.append('text')
+      .attr('x', width/2 )
+      .attr('y', 0 - (margin.top/2) )
+      .style('font-size', '35px')
+      .style('text-anchor', 'middle')
+      .text('Value Compared to Date Graph')
+
+  // Add the valueline path
   svg.append('path')
       .data([data])
       .attr('class', 'line')
@@ -96,7 +104,7 @@ d3.csv('data.csv', function(error, data) {
   // Text labe for Y Axis
   svg.append('text')
       .attr('class', 'f')
-      .attr('transform', 'rotate(-90)')
+      .attr('transform', 'rotate(-90)') // Note:This line rotates the x and y axis as well
       .attr('y', 0 - (margin.left / 2)) 
       .attr('x', 0 - (height / 2) )
       .attr('dy', '1em')
