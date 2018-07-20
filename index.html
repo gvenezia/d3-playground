@@ -3,8 +3,12 @@
 <!-- ==================== Styles ============================ -->
 <style> /* set the CSS */
 
+body {
+  font: 20px sans-serif;
+}
+
 .f {
-  font: 20px sans-serif
+  font: 20px sans-serif;
 }
 
 .line {
@@ -75,7 +79,7 @@ let valueline2 = d3.line()
 let area = d3.area()
     .curve( curveType )
     .x( (d) => x(d.date) )
-    .y0(height)
+    .y0( (d) => y(d.open) )
     .y1( (d) => y(d.close) );
 
 // append the svg obgect to the body of the page
@@ -89,9 +93,20 @@ let svg = d3.select('body').append('svg')
           'translate(' + margin.left + ',' + margin.top + ')');
 
 // ==================== Functions ============================
-//Gridlines
+// Gridlines
 const makeXGrid = () => d3.axisBottom(x).ticks(configuredTicks);
 const makeYGrid = () => d3.axisLeft(y).ticks(5);
+
+// Scatterplotting
+const plotValuelineDots = (data, xCordinate, yCordinate) => {
+  return svg.selectAll('dot')
+              .data(data)
+              .enter()
+            .append('circle')
+              .attr('r', 5)
+              .attr('cx', (d) => x(d[xCordinate]) ) 
+              .attr('cy', (d) => y(d[yCordinate]) );
+};
 
 
 // ==================== Get Data, Draw Graph ============================
@@ -103,11 +118,12 @@ d3.csv('data2.csv', (error, data) => {
   data.forEach( (d) => {
       d.date = parseTime(d.date);
       d.close = +d.close;
+      d.open = +d.open;
   });
 
   // Scale the range of the data
   x.domain( d3.extent(data, (d) => d.date ) );
-  y.domain( [0, d3.max(data, (d) => d.close )] );
+  y.domain( [0, d3.max(data, (d) => Math.max(d.close, d.open) )] );
 
   // Add the valueline path
   svg.append('path')
@@ -131,11 +147,28 @@ d3.csv('data2.csv', (error, data) => {
       .style('stroke-dasharray', ("8, 1"))
       .attr('d', valueline2);
 
+  // Add label for d.close valueline
+  svg.append('text')
+      .data([data])
+      .attr('x', width + 5)
+      .attr('y', (d) => height - d[0]['close'] + 5 ) // access the last object in data, then access the close value
+      .text('— Close');
+
+  // Add label for d.open valueline2
+  svg.append('text')
+      .data([data])
+      .attr('x', width + 5)
+      .attr('y', (d) => height - d[0]['open'] + 5 ) // access the last object in data, then access the close value
+      .text('—Open');// svg.append('text')
+  //     .attr('x', )
+  //     .attr('y', )
+  //     .text('Open');
+
   // Add the are under the valueline
-  // svg.append('path')
-  //     .data([data])
-  //     .attr('class', 'area')
-  //     .attr('d', area);
+  svg.append('path')
+      .data([data])
+      .attr('class', 'area')
+      .attr('d', area);
 
   // Add the X Axis
   svg.append('g')
@@ -191,14 +224,10 @@ d3.csv('data2.csv', (error, data) => {
         .tickFormat('')
       );
 
-      // Add the scatterplot
-  svg.selectAll('dot')
-      .data(data)
-      .enter()
-    .append('circle')
-      .attr('r', 5)
-      .attr('cx', (d) => x(d.date) ) 
-      .attr('cy', (d) => y(d.close) );
+  // Add the scatterplot
+  plotValuelineDots(data, 'date', 'close');
+  plotValuelineDots(data, 'date', 'open');
+
 
 });
 
