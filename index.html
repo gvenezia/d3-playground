@@ -84,7 +84,7 @@ const makeYGrid = () => d3.axisLeft(y).ticks(5);
 
 // ==================== Get Data, Draw Graph ============================
 // Get the data
-d3.csv('data.csv', (error, data) => {
+d3.csv( process.env.DATAFILE ? process.env.DATAFILE : 'data.csv', (error, data) => {
   if (error) throw error;
 
   // format the data
