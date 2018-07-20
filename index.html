@@ -151,18 +151,20 @@ d3.csv('data2.csv', (error, data) => {
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => height - d[0]['close'] + 5 ) // access the last object in data, then access the close value
+      .attr('y', (d) => height - d[0]['close'] + 9 ) // access the last object in data, then access the close value
+      .style('fill', 'steelblue')
       .text('— Close');
 
   // Add label for d.open valueline2
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => height - d[0]['open'] + 5 ) // access the last object in data, then access the close value
-      .text('—Open');// svg.append('text')
-  //     .attr('x', )
-  //     .attr('y', )
-  //     .text('Open');
+      .attr('y', (d) => height - d[0]['open'] + 9 ) // access the last object in data, then access the close value
+      .style('fill', 'maroon')
+      .text('—Open')
+
+
+
 
   // Add the are under the valueline
   svg.append('path')
