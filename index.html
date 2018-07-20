@@ -9,7 +9,7 @@
 .line {
   fill: none;
   stroke: steelblue;
-  stroke-width: 14px;
+  stroke-width: 4px;
 }
 
 </style>
@@ -21,7 +21,7 @@
 
 // set the dimensions and margins of the graph
 var margin = {top: 100, right: 100, bottom: 200, left: 200},
-    width = 1060 - margin.left - margin.right,
+    width = 1560 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
 // parse the date / time
@@ -33,6 +33,7 @@ var y = d3.scaleLinear().range([height, 0]);
 
 // define the line
 var valueline = d3.line()
+    .curve(d3.curveBasis)
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.close); });
 
@@ -72,6 +73,7 @@ d3.csv('data.csv', function(error, data) {
   svg.append('path')
       .data([data])
       .attr('class', 'line')
+      .style('stroke-dasharray', ("20, 3"))
       .attr('d', valueline);
 
   // Add the scatterplot
