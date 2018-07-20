@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset='utf-8'>
+<!-- ==================== Styles ============================ -->
 <style> /* set the CSS */
 
 .f {
@@ -14,6 +15,16 @@
 
 .area {
   fill: #C9A7B8;
+}
+
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: .7;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
 }
 
 </style>
@@ -32,11 +43,14 @@ const margin = {top: 100, right: 100, bottom: 200, left: 200},
 // parse the date / time
 const parseTime = d3.timeParse('%d-%b-%y');
 
-// set the ranges
-let x = d3.scaleTime().range([0, width]);
-let y = d3.scaleLinear().range([height, 0]);
+// define ticks to make dynamic
+const configuredTicks = d3.timeDay.every(5);
 
-// define the curve for both line and area
+// set the ranges
+const x = d3.scaleTime().range([0, width]);
+const y = d3.scaleLinear().range([height, 0]);
+
+// define curve to make dynamic
 const curveType = d3.curveMonotoneX;
 
 // define the line
@@ -61,6 +75,12 @@ let svg = d3.select('body').append('svg')
   .append('g')
     .attr('transform',
           'translate(' + margin.left + ',' + margin.top + ')');
+
+// ==================== Functions ============================
+//Gridlines
+const makeXGrid = () => d3.axisBottom(x).ticks(configuredTicks);
+const makeYGrid = () => d3.axisLeft(y).ticks(5);
+
 
 // ==================== Get Data, Draw Graph ============================
 // Get the data
@@ -107,21 +127,29 @@ d3.csv('data.csv', (error, data) => {
       .attr('cx', (d) => x(d.date) ) 
       .attr('cy', (d) => y(d.close) );
 
-
   // Add the X Axis
   svg.append('g')
       .attr('class', 'f')
       .attr('transform', 'translate(0,' + height + ')')
       .call(d3.axisBottom(x)
-        .ticks(d3.timeDay.every(3))
-        .tickFormat(d3.timeFormat('%Y-%m-%d'))) 
+        .ticks(d3.timeDay.every(5))
+        .tickFormat(d3.timeFormat('%b %_d'))) 
       .selectAll('text')
         .style('text-anchor', 'end')
         .attr('dx', '-.8em')
         .attr('dy', '-.15em')
-        .attr('transform', 'rotate(-35)');
+        .attr('transform', 'rotate(-40)');
 
-  // Text label for X Axis
+  // Add X Gridlines
+  svg.append('g')
+      .attr('class', 'grid')
+      .attr('transform', `translate(0, ${height})`)
+      .call(makeXGrid()
+        .tickSize(-height)
+        .tickFormat('')
+      );
+
+  // Add Text label for X Axis
   svg.append('text')
       .attr('class', 'f')
       .attr('x', width / 2)
@@ -135,7 +163,7 @@ d3.csv('data.csv', (error, data) => {
       .attr('class', 'f')
       .call(d3.axisLeft(y));
 
-  // Text labe for Y Axis
+  // Add Text label for Y Axis
   svg.append('text')
       .attr('class', 'f')
       .attr('transform', 'rotate(-90)') // Note:This line rotates the x and y axis as well
@@ -144,6 +172,14 @@ d3.csv('data.csv', (error, data) => {
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
       .text('Value');
+
+  // Add Y Gridlines
+  svg.append('g')
+      .attr('class', 'grid')
+      .call(makeYGrid()
+        .tickSize(-width)
+        .tickFormat('')
+      );
 
 });
 
