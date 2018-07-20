@@ -151,7 +151,8 @@ d3.csv('data2.csv', (error, data) => {
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => height - d[0]['close'] + 9 ) // access the last object in data, then access the close value
+      .attr('y', (d) => y(d[0]['close']) ) // access the last object in data, then access the close value
+      .attr('dy', '.25em') 
       .style('fill', 'steelblue')
       .text('— Close');
 
@@ -159,12 +160,10 @@ d3.csv('data2.csv', (error, data) => {
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => height - d[0]['open'] + 9 ) // access the last object in data, then access the close value
+      .attr('y', (d) => y(d[0]['open']) ) // access the last object in data, then access the close value
+      .attr('dy', '.25em')
       .style('fill', 'maroon')
-      .text('—Open')
-
-
-
+      .text('—Open');
 
   // Add the are under the valueline
   svg.append('path')
@@ -175,7 +174,7 @@ d3.csv('data2.csv', (error, data) => {
   // Add the X Axis
   svg.append('g')
       .attr('class', 'f')
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(x)
         .ticks(d3.timeDay.every(5))
         .tickFormat(d3.timeFormat('%b %_d'))) 
