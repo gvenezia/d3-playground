@@ -12,6 +12,10 @@
   stroke-width: 4px;
 }
 
+.area {
+  fill: #C9A7B8;
+}
+
 </style>
 <body>
 
@@ -31,11 +35,21 @@ var parseTime = d3.timeParse('%d-%b-%y');
 var x = d3.scaleTime().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);
 
+// define the curve for both line and area
+const curveType = d3.curveMonotoneX;
+
 // define the line
 var valueline = d3.line()
-    .curve(d3.curveBasis)
+    .curve( curveType )
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.close); });
+
+// define the area
+let area = d3.area()
+    .curve( curveType )
+    .x( (d) => x(d.date) )
+    .y0(height)
+    .y1( (d) => y(d.close) )
 
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
@@ -73,8 +87,14 @@ d3.csv('data.csv', function(error, data) {
   svg.append('path')
       .data([data])
       .attr('class', 'line')
-      .style('stroke-dasharray', ("20, 3"))
+      .style('stroke-dasharray', ("5, 1"))
       .attr('d', valueline);
+
+  // Add the are under the valueline
+  svg.append('path')
+      .data([data])
+      .attr('class', 'area')
+      .attr('d', area);
 
   // Add the scatterplot
   svg.selectAll('dot')
