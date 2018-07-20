@@ -13,6 +13,12 @@
   stroke-width: 4px;
 }
 
+.line2 {
+  fill: none;
+  stroke: maroon;
+  stroke-width: 4px;  
+}
+
 .area {
   fill: #C9A7B8;
 }
@@ -59,12 +65,18 @@ let valueline = d3.line()
     .x( (d) => x(d.date) )
     .y( (d) => y(d.close) );
 
+// define the 2nd line
+let valueline2 = d3.line()
+    .curve( curveType )
+    .x( (d) => x(d.date) )
+    .y( (d) => y(d.open) );    
+
 // define the area
 let area = d3.area()
     .curve( curveType )
     .x( (d) => x(d.date) )
     .y0(height)
-    .y1( (d) => y(d.close) )
+    .y1( (d) => y(d.close) );
 
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
@@ -84,7 +96,7 @@ const makeYGrid = () => d3.axisLeft(y).ticks(5);
 
 // ==================== Get Data, Draw Graph ============================
 // Get the data
-d3.csv( process.env.DATAFILE ? process.env.DATAFILE : 'data.csv', (error, data) => {
+d3.csv('data2.csv', (error, data) => {
   if (error) throw error;
 
   // format the data
@@ -97,6 +109,13 @@ d3.csv( process.env.DATAFILE ? process.env.DATAFILE : 'data.csv', (error, data) 
   x.domain( d3.extent(data, (d) => d.date ) );
   y.domain( [0, d3.max(data, (d) => d.close )] );
 
+  // Add the valueline path
+  svg.append('path')
+      .data([data])
+      .attr('class', 'line')
+      .style('stroke-dasharray', ("5, 1"))
+      .attr('d', valueline);
+
   // Add the title of the graph
   svg.append('text')
       .attr('x', width/2 )
@@ -105,27 +124,18 @@ d3.csv( process.env.DATAFILE ? process.env.DATAFILE : 'data.csv', (error, data) 
       .style('text-anchor', 'middle')
       .text('Value Compared to Date Graph')
 
-  // Add the valueline path
+  // Add the 2nd valueline path
   svg.append('path')
       .data([data])
-      .attr('class', 'line')
-      .style('stroke-dasharray', ("5, 1"))
-      .attr('d', valueline);
+      .attr('class', 'line2')
+      .style('stroke-dasharray', ("8, 1"))
+      .attr('d', valueline2);
 
   // Add the are under the valueline
-  svg.append('path')
-      .data([data])
-      .attr('class', 'area')
-      .attr('d', area);
-
-  // Add the scatterplot
-  svg.selectAll('dot')
-      .data(data)
-      .enter()
-    .append('circle')
-      .attr('r', 5)
-      .attr('cx', (d) => x(d.date) ) 
-      .attr('cy', (d) => y(d.close) );
+  // svg.append('path')
+  //     .data([data])
+  //     .attr('class', 'area')
+  //     .attr('d', area);
 
   // Add the X Axis
   svg.append('g')
@@ -180,6 +190,15 @@ d3.csv( process.env.DATAFILE ? process.env.DATAFILE : 'data.csv', (error, data) 
         .tickSize(-width)
         .tickFormat('')
       );
+
+      // Add the scatterplot
+  svg.selectAll('dot')
+      .data(data)
+      .enter()
+    .append('circle')
+      .attr('r', 5)
+      .attr('cx', (d) => x(d.date) ) 
+      .attr('cy', (d) => y(d.close) );
 
 });
 
