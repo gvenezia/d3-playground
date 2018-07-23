@@ -27,6 +27,14 @@ body {
   fill: #C9A7B8;
 }
 
+.axisLeft {
+  fill: steelblue;
+}
+
+.axisRight {
+  fill: maroon;
+}
+
 .grid line {
   stroke: lightgrey;
   stroke-opacity: .7;
@@ -44,6 +52,10 @@ body {
 <script src='https://d3js.org/d3.v4.min.js'></script>
 <script>
 
+// Choose your dataset
+const dataSet = 'test_data/data3.csv';
+
+
 // ==================== Set up Variables ============================
 // set the dimensions and margins of the graph
 const margin = {top: 100, right: 100, bottom: 200, left: 200},
@@ -57,8 +69,9 @@ const parseTime = d3.timeParse('%d-%b-%y');
 const configuredTicks = d3.timeDay.every(5);
 
 // set the ranges
-const x = d3.scaleTime().range([0, width]);
-const y = d3.scaleLinear().range([height, 0]);
+const x = d3.scaleTime().range([0, width]),
+      yLeft = d3.scaleLinear().range([height, 0]),
+      yRight = d3.scaleLinear().range([height, 0]);
 
 // define curve to make dynamic
 const curveType = d3.curveMonotoneX;
@@ -67,20 +80,20 @@ const curveType = d3.curveMonotoneX;
 let valueline = d3.line()
     .curve( curveType )
     .x( (d) => x(d.date) )
-    .y( (d) => y(d.close) );
+    .y( (d) => yLeft(d.close) );
 
 // define the 2nd line
 let valueline2 = d3.line()
     .curve( curveType )
     .x( (d) => x(d.date) )
-    .y( (d) => y(d.open) );    
+    .y( (d) => yRight(d.open) );    
 
 // define the area
 let area = d3.area()
     .curve( curveType )
     .x( (d) => x(d.date) )
-    .y0( (d) => y(d.open) )
-    .y1( (d) => y(d.close) );
+    .y0( (d) => yRight(d.open) )
+    .y1( (d) => yLeft(d.close) );
 
 // append the svg obgect to the body of the page
 let svg = d3.select('body').append('svg')
@@ -92,23 +105,24 @@ let svg = d3.select('body').append('svg')
 // ==================== Functions ============================
 // Gridlines
 const makeXGrid = () => d3.axisBottom(x).ticks(configuredTicks);
-const makeYGrid = () => d3.axisLeft(y).ticks(5);
+const makeYGrid = () => d3.axisLeft(yLeft).ticks(5);
+const makeYRightGrid = () => d3.axisLeft(yRight).ticks(5);
 
 // Scatterplotting
-const plotValuelineDots = (data, xCordinate, yCordinate) => {
+const plotValuelineDots = (data, yFunction, xCoordinate, yCoordinate) => {
   return svg.selectAll('dot')
               .data(data)
               .enter()
             .append('circle')
               .attr('r', 5)
-              .attr('cx', (d) => x(d[xCordinate]) ) 
-              .attr('cy', (d) => y(d[yCordinate]) );
+              .attr('cx', (d) => x( d[xCoordinate]) ) 
+              .attr('cy', (d) => yFunction( d[yCoordinate]) );
 };
 
 
 // ==================== Get Data, Draw Graph ============================
 // Get the data
-d3.csv('data2.csv', (error, data) => {
+d3.csv(dataSet, (error, data) => {
   if (error) throw error;
 
   // format the data
@@ -120,7 +134,8 @@ d3.csv('data2.csv', (error, data) => {
 
   // Scale the range of the data
   x.domain( d3.extent(data, (d) => d.date ) );
-  y.domain( [0, d3.max(data, (d) => Math.max(d.close, d.open) )] );
+  yLeft.domain( [0, d3.max(data, (d) => Math.max(d.close) )] );
+  yRight.domain( [0, d3.max(data, (d) => Math.max(d.open) )] );
 
   // Add the valueline path
   svg.append('path')
@@ -148,7 +163,7 @@ d3.csv('data2.csv', (error, data) => {
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => y(d[0]['close']) ) // access the last object in data, then access the close value
+      .attr('y', (d) => yLeft(d[0]['close']) ) // access the last object in data, then access the close value
       .attr('dy', '.25em') 
       .style('fill', 'steelblue')
       .text('— Close');
@@ -157,7 +172,7 @@ d3.csv('data2.csv', (error, data) => {
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => y(d[0]['open']) ) // access the last object in data, then access the close value
+      .attr('y', (d) => yRight(d[0]['open']) ) // access the last object in data, then access the close value
       .attr('dy', '.25em')
       .style('fill', 'maroon')
       .text('—Open');
@@ -182,13 +197,13 @@ d3.csv('data2.csv', (error, data) => {
         .attr('transform', 'rotate(-40)');
 
   // Add X Gridlines
-  svg.append('g')
-      .attr('class', 'grid')
-      .attr('transform', `translate(0, ${height})`)
-      .call(makeXGrid()
-        .tickSize(-height)
-        .tickFormat('')
-      );
+  // svg.append('g')
+  //     .attr('class', 'grid')
+  //     .attr('transform', `translate(0, ${height})`)
+  //     .call(makeXGrid()
+  //       .tickSize(-height)
+  //       .tickFormat('')
+  //     );
 
   // Add Text label for X Axis
   svg.append('text')
@@ -199,10 +214,16 @@ d3.csv('data2.csv', (error, data) => {
       .text('Date');
         
 
-  // Add the Y Axis
+  // Add the Left Y Axis for 'Close'
   svg.append('g')
-      .attr('class', 'f')
-      .call(d3.axisLeft(y));
+      .attr('class', 'axisLeft')
+      .call(d3.axisLeft(yLeft));
+
+  // Add the Right Y Axis for 'Open'
+  svg.append('g')
+      .attr('class', 'axisRight')
+      .attr('transform', `translate(${width}, 0)`)
+      .call(d3.axisRight(yRight));
 
   // Add Text label for Y Axis
   svg.append('text')
@@ -214,7 +235,7 @@ d3.csv('data2.csv', (error, data) => {
       .style('text-anchor', 'middle')
       .text('Value');
 
-  // Add Y Gridlines
+  // Add Y Left Gridlines
   svg.append('g')
       .attr('class', 'grid')
       .call(makeYGrid()
@@ -222,9 +243,17 @@ d3.csv('data2.csv', (error, data) => {
         .tickFormat('')
       );
 
+  // Add Y Right Gridlines
+  svg.append('g')
+      .attr('class', 'grid')
+      .call(makeYRightGrid()
+        .tickSize(-width)
+        .tickFormat('')
+      );
+
   // Add the scatterplot
-  plotValuelineDots(data, 'date', 'close');
-  plotValuelineDots(data, 'date', 'open');
+  plotValuelineDots(data, yLeft, 'date', 'close');
+  plotValuelineDots(data, yRight, 'date', 'open');
 
 
 });
