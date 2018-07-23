@@ -99,6 +99,19 @@ let area = d3.area()
 let svg = d3.select('body').append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
+    // Reveal the scatterplot on hover
+    .on('mouseover', () => {
+        d3.selectAll('circle')
+          .transition()
+          .duration(400)
+          .style('fill-opacity', 1);
+    })
+    .on('mouseout', () => {
+        d3.selectAll('circle')
+          .transition()
+          .duration(900)
+          .style('fill-opacity', 0);
+    })
   .append('g') // appends a 'group' element to 'svg'
     .attr('transform', `translate(${margin.left}, ${margin.top})`); // moves the 'group' element to the top left margin
 
@@ -114,6 +127,7 @@ const plotValuelineDots = (data, yFunction, xCoordinate, yCoordinate) => {
               .data(data)
               .enter()
             .append('circle')
+              .style('fill-opacity', 0)
               .attr('r', 5)
               .attr('cx', (d) => x( d[xCoordinate]) ) 
               .attr('cy', (d) => yFunction( d[yCoordinate]) );
@@ -137,20 +151,20 @@ d3.csv(dataSet, (error, data) => {
   yLeft.domain( [0, d3.max(data, (d) => Math.max(d.close) )] );
   yRight.domain( [0, d3.max(data, (d) => Math.max(d.open) )] );
 
-  // Add the valueline path
-  svg.append('path')
-      .data([data])
-      .attr('class', 'line')
-      .style('stroke-dasharray', ("5, 1"))
-      .attr('d', valueline);
-
   // Add the title of the graph
   svg.append('text')
       .attr('x', width/2 )
       .attr('y', 0 - (margin.top/2) )
       .style('font-size', '35px')
       .style('text-anchor', 'middle')
-      .text('Open and Close Values Over Time')
+      .text('Open and Close Values Over Time');
+
+  // Add the valueline path
+  svg.append('path')
+      .data([data])
+      .attr('class', 'line')
+      .style('stroke-dasharray', ("5, 1"))
+      .attr('d', valueline);
 
   // Add the 2nd valueline path
   svg.append('path')
