@@ -35,6 +35,13 @@ body {
   fill: maroon;
 }
 
+.yAxisLabel {
+  writing-mode    : vertical-lr;
+  text-orientation: upright;
+  text-anchor     : middle;
+  letter-spacing  : -.2em
+}
+
 .grid line {
   stroke: lightgrey;
   stroke-opacity: .7;
@@ -155,8 +162,8 @@ d3.csv(dataSet, (error, data) => {
   svg.append('text')
       .attr('x', width/2 )
       .attr('y', 0 - (margin.top/2) )
-      .style('font-size', '35px')
-      .style('text-anchor', 'middle')
+      .style(`font-size  : 35px;
+              text-anchor: middle`)
       .text('Open and Close Values Over Time');
 
   // Add the valueline path
@@ -244,10 +251,7 @@ d3.csv(dataSet, (error, data) => {
       .attr('class', 'f')
       .attr('x', 0 - (margin.left / 2)) 
       .attr('y', height / 2 )
-      .attr('style', `writing-mode    : vertical-lr;
-                      text-orientation: upright;
-                      text-anchor     : middle;
-                      letter-spacing  : -.2em`)
+      .attr('class', 'yAxisLabel')
       .text('Value @ Open');
 
   // Add Text label for Y Right Axis
@@ -255,10 +259,7 @@ d3.csv(dataSet, (error, data) => {
       .attr('class', 'f')
       .attr('x', width + (margin.right / 2) ) 
       .attr('y', height / 2 )
-      .attr('style', `writing-mode    : vertical-lr;
-                      text-orientation: upright;
-                      text-anchor     : middle;
-                      letter-spacing  : -.2em`)
+      .attr('class', 'yAxisLabel')
       .text('Value @ Close');
 
   // // Add Y Left Gridlines
