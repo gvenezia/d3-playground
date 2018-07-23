@@ -242,22 +242,22 @@ d3.csv(dataSet, (error, data) => {
   // Add Text label for Y Left Axis
   svg.append('text')
       .attr('class', 'f')
-      .attr('transform', 'rotate(-90)') // Note:This line rotates the x and y axis as well
-      .attr('y', 0 - (margin.left / 2)) 
-      .attr('x', 0 - (height / 2) )
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .text('Value @ Close');
+      .attr('x', 0 - (margin.left / 2)) 
+      .attr('y', height / 2 )
+      .attr('style', `writing-mode    : vertical-lr;
+                      text-orientation: upright;
+                      text-anchor     : middle;`)
+      .text('Value@Close');
 
   // Add Text label for Y Right Axis
   svg.append('text')
       .attr('class', 'f')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', width + (margin.right / 2) ) 
-      .attr('x', 0 - (height / 2) )
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .text('Value @ Open');
+      .attr('x', width + (margin.right / 2) ) 
+      .attr('y', height / 2 )
+      .attr('style', `writing-mode    : vertical-lr;
+                      text-orientation: upright;
+                      text-anchor     : middle;`)
+      .text('Value@Open');
 
   // // Add Y Left Gridlines
   // svg.append('g')
