@@ -150,7 +150,7 @@ d3.csv(dataSet, (error, data) => {
       .attr('y', 0 - (margin.top/2) )
       .style('font-size', '35px')
       .style('text-anchor', 'middle')
-      .text('Value Compared to Date Graph')
+      .text('Open and Close Values Over Time')
 
   // Add the 2nd valueline path
   svg.append('path')
@@ -225,7 +225,7 @@ d3.csv(dataSet, (error, data) => {
       .attr('transform', `translate(${width}, 0)`)
       .call(d3.axisRight(yRight));
 
-  // Add Text label for Y Axis
+  // Add Text label for Y Left Axis
   svg.append('text')
       .attr('class', 'f')
       .attr('transform', 'rotate(-90)') // Note:This line rotates the x and y axis as well
@@ -233,23 +233,33 @@ d3.csv(dataSet, (error, data) => {
       .attr('x', 0 - (height / 2) )
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
-      .text('Value');
+      .text('Value @ Close');
 
-  // Add Y Left Gridlines
-  svg.append('g')
-      .attr('class', 'grid')
-      .call(makeYGrid()
-        .tickSize(-width)
-        .tickFormat('')
-      );
+  // Add Text label for Y Right Axis
+  svg.append('text')
+      .attr('class', 'f')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', width + (margin.right / 2) ) 
+      .attr('x', 0 - (height / 2) )
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Value @ Open');
 
-  // Add Y Right Gridlines
-  svg.append('g')
-      .attr('class', 'grid')
-      .call(makeYRightGrid()
-        .tickSize(-width)
-        .tickFormat('')
-      );
+  // // Add Y Left Gridlines
+  // svg.append('g')
+  //     .attr('class', 'grid')
+  //     .call(makeYGrid()
+  //       .tickSize(-width)
+  //       .tickFormat('')
+  //     );
+
+  // // Add Y Right Gridlines
+  // svg.append('g')
+  //     .attr('class', 'grid')
+  //     .call(makeYRightGrid()
+  //       .tickSize(-width)
+  //       .tickFormat('')
+  //     );
 
   // Add the scatterplot
   plotValuelineDots(data, yLeft, 'date', 'close');
