@@ -80,20 +80,20 @@ const curveType = d3.curveMonotoneX;
 let valueline = d3.line()
     .curve( curveType )
     .x( (d) => x(d.date) )
-    .y( (d) => yLeft(d.close) );
+    .y( (d) => yLeft(d.open) );
 
 // define the 2nd line
 let valueline2 = d3.line()
     .curve( curveType )
     .x( (d) => x(d.date) )
-    .y( (d) => yRight(d.open) );    
+    .y( (d) => yRight(d.close) );    
 
 // define the area
 let area = d3.area()
     .curve( curveType )
     .x( (d) => x(d.date) )
-    .y0( (d) => yRight(d.open) )
-    .y1( (d) => yLeft(d.close) );
+    .y0( (d) => yRight(d.close) )
+    .y1( (d) => yLeft(d.open) );
 
 // append the svg obgect to the body of the page
 let svg = d3.select('body').append('svg')
@@ -148,8 +148,8 @@ d3.csv(dataSet, (error, data) => {
 
   // Scale the range of the data
   x.domain( d3.extent(data, (d) => d.date ) );
-  yLeft.domain( [0, d3.max(data, (d) => Math.max(d.close) )] );
-  yRight.domain( [0, d3.max(data, (d) => Math.max(d.open) )] );
+  yLeft.domain( [0, d3.max(data, (d) => Math.max(d.open) )] );
+  yRight.domain( [0, d3.max(data, (d) => Math.max(d.close) )] );
 
   // Add the title of the graph
   svg.append('text')
@@ -177,19 +177,19 @@ d3.csv(dataSet, (error, data) => {
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => yLeft(d[0]['close']) ) // access the last object in data, then access the close value
+      .attr('y', (d) => yRight(d[0]['close']) ) // access the last object in data, then access the close value
       .attr('dy', '.25em') 
-      .style('fill', 'steelblue')
+      .style('fill', 'maroon')
       .text('— Close');
 
   // Add label for d.open valueline2
   svg.append('text')
       .data([data])
       .attr('x', width + 5)
-      .attr('y', (d) => yRight(d[0]['open']) ) // access the last object in data, then access the close value
+      .attr('y', (d) => yLeft(d[0]['open']) ) // access the last object in data, then access the close value
       .attr('dy', '.25em')
-      .style('fill', 'maroon')
-      .text('—Open');
+      .style('fill', 'steelblue')
+      .text('— Open');
 
   // Add the are under the valueline
   svg.append('path')
@@ -228,12 +228,12 @@ d3.csv(dataSet, (error, data) => {
       .text('Date');
         
 
-  // Add the Left Y Axis for 'Close'
+  // Add the Left Y Axis for 'Open'
   svg.append('g')
       .attr('class', 'axisLeft')
       .call(d3.axisLeft(yLeft));
 
-  // Add the Right Y Axis for 'Open'
+  // Add the Right Y Axis for 'Close'
   svg.append('g')
       .attr('class', 'axisRight')
       .attr('transform', `translate(${width}, 0)`)
@@ -248,7 +248,7 @@ d3.csv(dataSet, (error, data) => {
                       text-orientation: upright;
                       text-anchor     : middle;
                       letter-spacing  : -.2em`)
-      .text('Value @ Close');
+      .text('Value @ Open');
 
   // Add Text label for Y Right Axis
   svg.append('text')
@@ -259,7 +259,7 @@ d3.csv(dataSet, (error, data) => {
                       text-orientation: upright;
                       text-anchor     : middle;
                       letter-spacing  : -.2em`)
-      .text('Value @ Open');
+      .text('Value @ Close');
 
   // // Add Y Left Gridlines
   // svg.append('g')
@@ -278,8 +278,8 @@ d3.csv(dataSet, (error, data) => {
   //     );
 
   // Add the scatterplot
-  plotValuelineDots(data, yLeft, 'date', 'close');
-  plotValuelineDots(data, yRight, 'date', 'open');
+  plotValuelineDots(data, yLeft, 'date', 'open');
+  plotValuelineDots(data, yRight, 'date', 'close');
 
 
 });
