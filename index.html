@@ -58,7 +58,7 @@ const dataSet = 'test_data/data3.csv';
 
 // ==================== Set up Variables ============================
 // set the dimensions and margins of the graph
-const margin = {top: 100, right: 100, bottom: 200, left: 200},
+const margin = {top: 100, right: 200, bottom: 200, left: 200},
     width = 1560 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
@@ -246,8 +246,9 @@ d3.csv(dataSet, (error, data) => {
       .attr('y', height / 2 )
       .attr('style', `writing-mode    : vertical-lr;
                       text-orientation: upright;
-                      text-anchor     : middle;`)
-      .text('Value@Close');
+                      text-anchor     : middle;
+                      letter-spacing  : -.2em`)
+      .text('Value @ Close');
 
   // Add Text label for Y Right Axis
   svg.append('text')
@@ -256,8 +257,9 @@ d3.csv(dataSet, (error, data) => {
       .attr('y', height / 2 )
       .attr('style', `writing-mode    : vertical-lr;
                       text-orientation: upright;
-                      text-anchor     : middle;`)
-      .text('Value@Open');
+                      text-anchor     : middle;
+                      letter-spacing  : -.2em`)
+      .text('Value @ Open');
 
   // // Add Y Left Gridlines
   // svg.append('g')
