@@ -41,24 +41,12 @@ let area = d3.area()
     .y1( (d) => yLeft(d.open) );
 
 // append the svg obgect to the body of the page
-let svg = d3.select('body').append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
-    // Reveal the scatterplot on hover
-    .on('mouseover', () => {
-        d3.selectAll('circle')
-          .transition()
-          .duration(400)
-          .style('fill-opacity', 1);
-    })
-    .on('mouseout', () => {
-        d3.selectAll('circle')
-          .transition()
-          .duration(900)
-          .style('fill-opacity', 0);
-    })
-  .append('g') // appends a 'group' element to 'svg'
-    .attr('transform', `translate(${margin.left}, ${margin.top})`); // moves the 'group' element to the top left margin
+let svg = d3.select('body')
+            .append('svg')
+              .attr('width', width + margin.left + margin.right)
+              .attr('height', height + margin.top + margin.bottom)
+            .append('g') // appends a 'group' element to 'svg'
+              .attr('transform', `translate(${margin.left}, ${margin.top})`); // moves the 'group' element to the top left margin
 
 // ==================== Functions ============================
 // Gridlines
@@ -84,7 +72,7 @@ const plotValuelineDots = (data, yFunction, xCoordinate, yCoordinate) => {
 d3.csv(dataSet, (error, data) => {
   if (error) throw error;
 
-  // format the data
+  // Reformat the data to eliminate potential errors from the "stringification" from the .csv method
   data.forEach( (d) => {
       d.date = parseTime(d.date);
       d.close = +d.close;
@@ -100,8 +88,7 @@ d3.csv(dataSet, (error, data) => {
   svg.append('text')
       .attr('x', width/2 )
       .attr('y', 0 - (margin.top/2) )
-      .attr('style', `font-size  : 35px;
-                      text-anchor: middle;`)
+      .attr('style', 'font-size: 35px; text-anchor: middle;')
       .text('Open and Close Values Over Time');
 
   // Add the valueline path
@@ -136,10 +123,23 @@ d3.csv(dataSet, (error, data) => {
       .style('fill', 'steelblue')
       .text('— Open');
 
-  // Add the are under the valueline
+  // Add the area under the valueline
   svg.append('path')
       .data([data])
       .attr('class', 'area')
+        // Reveal the scatterplot on hover
+      .on('mouseover', () => {
+          d3.selectAll('circle')
+            .transition()
+            .duration(400)
+            .style('fill-opacity', 1);
+      })
+      .on('mouseout', () => {
+          d3.selectAll('circle')
+            .transition()
+            .duration(900)
+            .style('fill-opacity', 0);
+      })
       .attr('d', area);
 
   // Add the X Axis
