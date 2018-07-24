@@ -1,0 +1,48 @@
+body {
+  font: 20px sans-serif;
+}
+
+.f {
+  font: 20px sans-serif;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 4px;
+}
+
+.line2 {
+  fill: none;
+  stroke: maroon;
+  stroke-width: 4px;  
+}
+
+.area {
+  fill: #C9A7B8;
+}
+
+.axisLeft {
+  fill: steelblue;
+}
+
+.axisRight {
+  fill: maroon;
+}
+
+.yAxisLabel {
+  writing-mode    : vertical-lr;
+  text-orientation: upright;
+  text-anchor     : middle;
+  letter-spacing  : -.2em
+}
+
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: .7;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
