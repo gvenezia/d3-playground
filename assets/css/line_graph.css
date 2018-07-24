@@ -1,4 +1,13 @@
-body {
+/* 
+Linking to this modular CSS folder in index.html leads to 
+only some of the styles loading (ex. valuelines and area are all black)
+
+Is this happening because of the precedence of inline styles over included?
+
+Does the SVG styles/inherits have higher precedence than the modular CSS?
+*/
+
+/*body {
   font: 20px sans-serif;
 }
 
@@ -45,4 +54,4 @@ body {
 
 .grid path {
   stroke-width: 0;
-}
+}*/
