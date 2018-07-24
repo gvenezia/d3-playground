@@ -96,7 +96,13 @@ d3.csv(dataSet, (error, data) => {
   yLeft.domain( [0, d3.max(data, (d) => Math.max(d.open) )] );
   yRight.domain( [0, d3.max(data, (d) => Math.max(d.close) )] );
 
-  // 
+  // Add the title of the graph
+  svg.append('text')
+      .attr('x', width/2 )
+      .attr('y', 0 - (margin.top/2) )
+      .attr('style', `font-size  : 35px;
+                      text-anchor: middle;`)
+      .text('Open and Close Values Over Time');
 
   // Add the valueline path
   svg.append('path')

@@ -7,7 +7,7 @@ Is this happening because of the precedence of inline styles over included?
 Does the SVG styles/inherits have higher precedence than the modular CSS?
 */
 
-/*body {
+body {
   font: 20px sans-serif;
 }
 
@@ -54,4 +54,4 @@ Does the SVG styles/inherits have higher precedence than the modular CSS?
 
 .grid path {
   stroke-width: 0;
-}*/
+}
