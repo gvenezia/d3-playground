@@ -2,45 +2,45 @@
 const dataSet = '/assets/test_data/data3.csv';
 
 // ==================== Set up Variables ============================
-// set the dimensions and margins of the graph
+// Set the dimensions and margins of the graph
 const margin = {top: 100, right: 200, bottom: 200, left: 200},
       width = 1560 - margin.left - margin.right,
       height = 900 - margin.top - margin.bottom;
 
-// parse the date / time
+// Set parsing parameters for dates
 const parseTime = d3.timeParse('%d-%b-%y');
 
-// define ticks to make dynamic
+// Define ticks to make dynamic
 const configuredTicks = d3.timeDay.every(5);
 
-// set the ranges
+// Set the ranges by scaling the data
 const x = d3.scaleTime().range([0, width]),
       yLeft = d3.scaleLinear().range([height, 0]),
       yRight = d3.scaleLinear().range([height, 0]);
 
-// define curve to make dynamic
+// Define curve of valuelines to make dynamic
 const curveType = d3.curveMonotoneX;
 
-// define the line
-let valueline = d3.line()
+// Define the 1st valueline
+const valueline = d3.line()
     .curve( curveType )
     .x( (d) => x(d.date) )
     .y( (d) => yLeft(d.open) );
 
-// define the 2nd line
-let valueline2 = d3.line()
+// Define the 2nd valueline
+const valueline2 = d3.line()
     .curve( curveType )
     .x( (d) => x(d.date) )
     .y( (d) => yRight(d.close) );    
 
-// define the area
+// Define the fill area in the graph
 let area = d3.area()
     .curve( curveType )
     .x( (d) => x(d.date) )
     .y0( (d) => yRight(d.close) )
     .y1( (d) => yLeft(d.open) );
 
-// append the svg obgect to the body of the page
+// Append the svg obgect to the body of the page
 let svg = d3.select('body')
             .append('svg')
               .attr('width', width + margin.left + margin.right)
@@ -49,12 +49,12 @@ let svg = d3.select('body')
               .attr('transform', `translate(${margin.left}, ${margin.top})`); // moves the 'group' element to the top left margin
 
 // ==================== Functions ============================
-// Gridlines
-const makeXGrid = () => d3.axisBottom(x).ticks(configuredTicks);
-const makeYGrid = () => d3.axisLeft(yLeft).ticks(5);
-const makeYRightGrid = () => d3.axisLeft(yRight).ticks(5);
+// Make gridlines
+const makeXGrid      = () => d3.axisBottom(x).ticks(configuredTicks),
+      makeYLeftGrid  = () => d3.axisLeft(yLeft).ticks(5),
+      makeYRightGrid = () => d3.axisLeft(yRight).ticks(5);
 
-// Scatterplotting
+// Make a scatterplot
 const plotValuelineDots = (data, yFunction, xCoordinate, yCoordinate) => {
   return svg.selectAll('dot')
               .data(data)
@@ -156,13 +156,13 @@ d3.csv(dataSet, (error, data) => {
         .attr('transform', 'rotate(-40)');
 
   // Add X Gridlines
-  // svg.append('g')
-  //     .attr('class', 'grid')
-  //     .attr('transform', `translate(0, ${height})`)
-  //     .call(makeXGrid()
-  //       .tickSize(-height)
-  //       .tickFormat('')
-  //     );
+  svg.append('g')
+      .attr('class', 'grid')
+      .attr('transform', `translate(0, ${height})`)
+      .call(makeXGrid()
+        .tickSize(-height)
+        .tickFormat('')
+      );
 
   // Add Text label for X Axis
   svg.append('text')
@@ -203,7 +203,7 @@ d3.csv(dataSet, (error, data) => {
   // // Add Y Left Gridlines
   // svg.append('g')
   //     .attr('class', 'grid')
-  //     .call(makeYGrid()
+  //     .call(makeYLeftGrid()
   //       .tickSize(-width)
   //       .tickFormat('')
   //     );
