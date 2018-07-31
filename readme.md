@@ -18,6 +18,6 @@ This simple line graph is written with d3.js v4 and based on @mbostock's example
 This simple graph is designed to be used as a starting point for further development as part of documenting an update to the book [D3 Tips and Tricks](https://leanpub.com/d3-t-and-t-v4) to version 4 of d3.js.
 
 Here are some screenshots of the basic setup and modifications that I've made:
-![screenshot of the graph in the browser](https://github.com/gvenezia/d3-playground/blob/master/screenshots/graph.png)
-![screenshot of graph 2 in the browser](https://github.com/gvenezia/d3-playground/blob/master/screenshots/line_graph_2.png)
-![screenshot of graph 3 in the browser](https://github.com/gvenezia/d3-playground/blob/master/screenshots/line_graph_3.png)
+![screenshot of the graph in the browser](https://github.com/gvenezia/d3-playground/blob/master/assets/screenshots/graph.png)
+![screenshot of graph 2 in the browser](https://github.com/gvenezia/d3-playground/blob/master/assets/screenshots/line_graph_2.png)
+![screenshot of graph 3 in the browser](https://github.com/gvenezia/d3-playground/blob/master/assets/screenshots/line_graph_3.png)
