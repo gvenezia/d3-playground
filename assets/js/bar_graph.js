@@ -25,6 +25,29 @@ var svg = d3.select("body").append("svg")
               .attr("transform",
                     "translate(" + margin.left + "," + margin.top + ")");
 
+// Define a gradient for our bars to use
+// Example taken from: https://www.freshconsulting.com/d3-js-gradients-the-easy-way/
+var defs = svg.append("defs");
+
+var gradient = defs.append("linearGradient")
+   .attr("id", "svgGradient")
+   .attr("x1", "0%")
+   .attr("x2", "65%")
+   .attr("y1", "0%")
+   .attr("y2", "100%");
+
+gradient.append("stop")
+   .attr('class', 'start')
+   .attr("offset", "0%")
+   .attr("stop-color", "#cbc3d9")
+   .attr("stop-opacity", 1);
+
+gradient.append("stop")
+   .attr('class', 'end')
+   .attr("offset", "100%")
+   .attr("stop-color", "#586543")
+   .attr("stop-opacity", 1);
+
 // =================== Data & Chart Processing ======================
 // Get the data and use a callback function for processing it
 d3.csv(dataSet, function(error, data) {
@@ -44,7 +67,7 @@ d3.csv(dataSet, function(error, data) {
       .data(data)
       .enter()
       .append("rect")
-      .attr("class", "bar")
+      .attr("fill", "url(#svgGradient)")
       .attr("x", function(d) { return x(d.salesperson); }) 
       .attr("width", x.bandwidth())
       .attr("y", function(d) { return y(d.sales); }) 
