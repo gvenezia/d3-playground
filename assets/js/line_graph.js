@@ -18,6 +18,10 @@ const x = d3.scaleTime().range([0, width]),
       yLeft = d3.scaleLinear().range([height, 0]),
       yRight = d3.scaleLinear().range([height, 0]);
 
+const xAxis = d3.axisBottom(x)
+                  .ticks(d3.timeDay.every(5))
+                  .tickFormat(d3.timeFormat('%b %_d')); 
+
 // Define curve of valuelines to make dynamic
 const curveType = d3.curveMonotoneX;
 
@@ -146,9 +150,7 @@ d3.csv(dataSet, (error, data) => {
   svg.append('g')
       .attr('class', 'f')
       .attr('transform', `translate(0, ${height})`)
-      .call(d3.axisBottom(x)
-        .ticks(d3.timeDay.every(5))
-        .tickFormat(d3.timeFormat('%b %_d'))) 
+      .call(xAxis)
       .selectAll('text')
         .style('text-anchor', 'end')
         .attr('dx', '-.8em')
