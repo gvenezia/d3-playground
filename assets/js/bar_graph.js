@@ -10,7 +10,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
 // Set the ranges
 var x = d3.scaleBand()
             .range([0, width])
-            .padding(0.1);
+            .padding(0.05);
 
 var y = d3.scaleLinear()
             .range([height, 0]);  
@@ -30,23 +30,23 @@ var svg = d3.select("body").append("svg")
 var defs = svg.append("defs");
 
 var gradient = defs.append("linearGradient")
-   .attr("id", "svgGradient")
-   .attr("x1", "0%")
-   .attr("x2", "65%")
-   .attr("y1", "0%")
-   .attr("y2", "100%");
+                     .attr("id", "svgGradient")
+                     .attr("x1", "0%")
+                     .attr("x2", "65%")
+                     .attr("y1", "0%")
+                     .attr("y2", "100%");
 
 gradient.append("stop")
-   .attr('class', 'start')
-   .attr("offset", "0%")
-   .attr("stop-color", "#cbc3d9")
-   .attr("stop-opacity", 1);
+         .attr('class', 'start')
+         .attr("offset", "0%")
+         .attr("stop-color", "#cbc3d9")
+         .attr("stop-opacity", 1);
 
 gradient.append("stop")
-   .attr('class', 'end')
-   .attr("offset", "100%")
-   .attr("stop-color", "#586543")
-   .attr("stop-opacity", 1);
+         .attr('class', 'end')
+         .attr("offset", "100%")
+         .attr("stop-color", "#586543")
+         .attr("stop-opacity", 1);
 
 // =================== Data & Chart Processing ======================
 // Get the data and use a callback function for processing it
